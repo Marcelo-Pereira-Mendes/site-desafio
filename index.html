@@ -33,7 +33,7 @@ body{
     background: linear-gradient(135deg,#000,#111,#222);
 }
 
-/* 🔥 IMAGEM CORRIGIDA */
+/* IMAGEM */
 .hero::before{
     content:"";
     position:absolute;
@@ -75,22 +75,32 @@ body{
     padding:16px 36px;
     box-shadow:0 0 15px #00FFFF,0 0 25px #FF00FF;
     transition:0.3s;
+    cursor: pointer;
 }
 
 .btn-custom:hover{
     transform:scale(1.05);
 }
 
-/* MODAL */
+/* 🔥 MODAL COM BORDA 2PX */
 .modal-content{
     background:#000;
     border-radius:20px;
+    border:2px solid #00FFFF;
+    box-shadow:0 0 10px #00FFFF40;
 }
 
+/* INPUTS */
 .form-control{
     background:#111;
     border:1px solid #333;
     color:#FFF;
+}
+
+/* 👇 ADICIONADO (CURSOR POINTER) */
+button,
+input{
+    cursor:pointer;
 }
 
 /* ALERTA */
@@ -104,12 +114,11 @@ body{
     width:90%;
     max-width:350px;
 
-    background:#FF0040; /* vermelho = erro */
+    background:#FF0040;
     color:#FFFFFF;
 
     padding:14px;
     border-radius:10px;
-
     text-align:center;
 
     z-index:9999;
@@ -130,12 +139,13 @@ body{
     margin-bottom:10px;
     display:flex;
     justify-content:space-between;
+    cursor: pointer;
 }
 
-/* INPUTS MELHORADOS */
+/* INPUT ADMIN */
 #adminPanel input {
     background:#000;
-    color:#fff;
+    color:#FFFFFF;
     border:1px solid #444;
     padding:10px;
     border-radius:8px;
@@ -208,7 +218,7 @@ let alunos = JSON.parse(localStorage.getItem("alunos")) || [];
 function get(id){ return document.getElementById(id); }
 function safe(v){ return (v||"").trim(); }
 
-// ALERTA
+/* ALERTA */
 function showAlert(msg){
     let a = get("alertMsg");
     a.innerText = msg;
@@ -216,7 +226,7 @@ function showAlert(msg){
     setTimeout(()=>a.style.display="none",3000);
 }
 
-// LOGIN
+/* LOGIN */
 function login(){
     let user = safe(get("user").value);
     let pass = safe(get("pass").value);
@@ -243,7 +253,7 @@ function login(){
     window.location.href="treino.html";
 }
 
-// CADASTRO
+/* CADASTRO */
 function cadastrar(){
     let user = safe(get("novoUser").value);
     let pass = safe(get("novaPass").value);
@@ -272,7 +282,7 @@ function cadastrar(){
     listarAlunos();
 }
 
-// LISTAR
+/* LISTAR */
 function listarAlunos(){
     let html="";
     alunos.forEach((a,i)=>{
@@ -292,14 +302,14 @@ function listarAlunos(){
     get("lista").innerHTML=html;
 }
 
-// WHATS
+/* WHATS */
 function enviar(i){
     let a = alunos[i];
     let msg = `Olá! Seu login: ${a.user} Senha: ${a.pass}`;
     window.open(`https://wa.me/${a.tel}?text=${encodeURIComponent(msg)}`);
 }
 
-// REMOVER
+/* REMOVER */
 function remover(i){
     if(confirm("Excluir aluno?")){
         alunos.splice(i,1);
