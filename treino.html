@@ -1,0 +1,406 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Programa 21 Dias - Marcelo Mendes</title>
+
+<style>
+body{
+    margin:0;
+    font-family: Arial, sans-serif;
+    color:#eaeaea;
+    background:#000;
+}
+
+header{
+    text-align:center;
+    padding:30px 20px;
+    background:rgba(0,0,0,0.6);
+    border-bottom:1px solid rgba(255,255,255,0.08);
+}
+header h1{
+    margin:0;
+    font-size:2.2em;
+    font-weight:800;
+}
+header p{
+    margin-top:6px;
+    color:#00f5ff;
+}
+
+.seletorTreino{
+    display:flex;
+    flex-wrap:wrap;
+    justify-content:center;
+    gap:10px;
+    margin:25px 0;
+}
+.seletorTreino button{
+    width:42px;
+    height:42px;
+    border-radius:50%;
+    border:none;
+    background:linear-gradient(135deg,#00f5ff,#ff00c8);
+    font-weight:bold;
+    cursor:pointer;
+}
+
+.container{
+    max-width:900px;
+    margin:auto;
+    padding:15px;
+}
+
+.progress-bar{
+    height:24px;
+    background:#0a0a0a;
+    border-radius:12px;
+    overflow:hidden;
+    margin-bottom:25px;
+}
+.progress{
+    height:100%;
+    width:0%;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    font-size:12px;
+    font-weight:bold;
+    color:#000;
+    background:linear-gradient(90deg,#00f5ff,#ff00c8);
+}
+
+.treino{
+    background:rgba(10,10,10,0.9);
+    padding:20px;
+    margin-bottom:25px;
+    border-radius:14px;
+}
+
+.exercicio{
+    padding:18px 0;
+    border-bottom:1px solid rgba(255,255,255,0.08);
+}
+.exercicio strong{
+    color:#00f5ff;
+}
+
+video, img{
+    width:100%;
+    border-radius:10px;
+}
+
+.series-container{
+    display:grid;
+    grid-template-columns:repeat(auto-fit,minmax(120px,1fr));
+    gap:12px;
+    margin-top:12px;
+}
+
+.serie{
+    background:#0d0d0d;
+    padding:12px;
+    border-radius:12px;
+    text-align:center;
+}
+.serie button{
+    background:linear-gradient(135deg,#00f5ff,#ff00c8);
+    border:none;
+    padding:10px;
+    border-radius:8px;
+    width:100%;
+    font-weight:bold;
+}
+
+.timer{
+    margin-top:8px;
+    font-size:26px;
+    color:#00f5ff;
+}
+.rest{
+    color:#ff00c8;
+}
+
+/* BOTÃO PESO */
+.btn-peso{
+    position:fixed;
+    bottom:20px;
+    right:20px;
+    background: linear-gradient(135deg,#00f5ff,#ff00c8);
+    color:#000;
+    font-weight:800;
+    padding:14px 18px;
+    border-radius:50px;
+    text-decoration:none;
+    box-shadow:0 0 15px #00f5ff,0 0 25px #ff00c8;
+    z-index:9999;
+    transition:0.3s;
+}
+.btn-peso:hover{
+    transform:scale(1.08);
+    box-shadow:0 0 25px #00f5ff,0 0 40px #ff00c8;
+}
+</style>
+</head>
+
+<body>
+
+<header>
+<h1>Programa de Treino 21 Dias</h1>
+<p>Treino progressivo para emagrecimento</p>
+</header>
+
+<div class="container">
+<div class="seletorTreino" id="menuTreinos"></div>
+
+<div class="progress-bar">
+<div class="progress" id="progress">0%</div>
+</div>
+
+<div id="treinos"></div>
+</div>
+
+<!-- BOTÃO PESO -->
+<a href="peso.html" class="btn-peso">Peso Kg</a>
+
+<script>
+
+/* ===== ALUNO ===== */
+let aluno = localStorage.getItem("aluno_nome")
+if(!aluno){
+    aluno = prompt("Digite seu nome:") || "anonimo"
+    localStorage.setItem("aluno_nome", aluno)
+}
+
+/* ===== PROGRESSO ===== */
+let totalSeries=0 
+let completedSeries=0
+
+function carregarProgresso(){
+    const salvo = localStorage.getItem("progresso_" + aluno)
+    if(salvo) completedSeries = parseInt(salvo)
+}
+
+function salvarProgresso(){
+    localStorage.setItem("progresso_" + aluno, completedSeries)
+}
+
+function updateProgress(){
+    if(totalSeries === 0) return 
+    let percent = (completedSeries/totalSeries)*100
+    const bar = document.getElementById("progress")
+    bar.style.width = percent + "%"
+    bar.innerText = Math.round(percent) + "%"
+    salvarProgresso()
+}
+
+/* ===== TIMER ===== */
+const timersAtivos = {}
+
+function iniciarSerie(segundos,timerID,checkID,restID){
+    if(timersAtivos[timerID]) return
+
+    let tempo=segundos
+    const display=document.getElementById(timerID)
+
+    timersAtivos[timerID] = true
+
+    const intervalo=setInterval(()=>{
+        display.innerText=tempo
+        tempo--
+
+        if(tempo<0){
+            clearInterval(intervalo)
+            display.innerText="✔"
+
+            const check=document.getElementById(checkID)
+            if(!check.checked){
+                check.checked=true
+                completedSeries++
+                updateProgress()
+            }
+
+            startRest(restID)
+            delete timersAtivos[timerID]
+        }
+    },1000)
+}
+
+function startRest(restID){
+    let rest=30
+    const display=document.getElementById(restID)
+
+    const interval=setInterval(()=>{
+        display.innerText="Descanso "+rest+"s"
+        rest--
+
+        if(rest<0){
+            clearInterval(interval)
+            display.innerText="Pronto"
+        }
+    },1000)
+}
+
+/* ===== MENU ===== */
+const menu=document.getElementById("menuTreinos")
+for(let i=1;i<=21;i++){
+    let btn=document.createElement("button")
+    btn.innerText=i
+    btn.onclick=()=>document.getElementById("treino"+i).scrollIntoView({behavior:"smooth"})
+    menu.appendChild(btn)
+}
+
+/* ===== TREINOS ===== */
+const treinos = {
+
+1:[
+{nome:"Corrida baixa",video:"video/corrida_no_lugar.mp4"},
+{nome:"Polichinelo mãos na cintura",video:"video/Polichinelo_maos_na_cintura.mp4"},
+{nome:"Agachamento na parede",video:"video/agachamento_parede.mp4"},
+{nome:"Prancha",video:"video/prancha.mp4"}
+],
+
+2:{imagem:"imagem/corrida_desafio.png"},
+4:{imagem:"imagem/corrida_desafio.png"},
+6:{imagem:"imagem/corrida_desafio.png"},
+8:{imagem:"imagem/corrida_desafio.png"},
+10:{imagem:"imagem/corrida_desafio.png"},
+12:{imagem:"imagem/corrida_desafio.png"},
+14:{imagem:"imagem/corrida_desafio.png"},
+16:{imagem:"imagem/corrida_desafio.png"},
+18:{imagem:"imagem/corrida_desafio.png"},
+20:{imagem:"imagem/corrida_desafio.png"},
+
+3:[
+{nome:"Polichinelo",video:"video/Polichinelo_maos_na_cintura.mp4"},
+{nome:"Agachamento salto",video:"video/agachamento_com_salto.mp4"},
+{nome:"Recuo braços",video:"video/recuo_bracos.mp4"},
+{nome:"Joelho alto",video:"video/joelho_alto.mp4"}
+],
+
+5:[
+{nome:"Corrida baixa",video:"video/corrida_no_lugar.mp4"},
+{nome:"Polichinelo mãos na cintura",video:"video/Polichinelo_maos_na_cintura.mp4"},
+{nome:"Agachamento na parede",video:"video/agachamento_parede.mp4"},
+{nome:"Prancha",video:"video/prancha.mp4"}
+],
+
+7:[
+{nome:"Corrida baixa",video:"video/corrida_no_lugar.mp4"},
+{nome:"Joelho alto",video:"video/joelho_alto.mp4"},
+{nome:"Agachamento",video:"video/agachamento.mp4"},
+{nome:"Abdominal canoa",video:"video/abdomen_canoa.mp4"}
+],
+
+9:[
+{nome:"Polichinelo",video:"video/polichinelo.mp4"},
+{nome:"Agachamento salto",video:"video/agachamento_com_salto.mp4"},
+{nome:"Recuo braços",video:"video/recuo_bracos.mp4"},
+{nome:"Joelho lateral",video:"video/joelho_alto.mp4"}
+],
+
+11:[
+{nome:"Corrida baixa",video:"video/corrida_no_lugar.mp4"},
+{nome:"Elevação de joelho",video:"video/Elevacao_de_joelho.mp4"},
+{nome:"Agachamento",video:"video/agachamento.mp4"},
+{nome:"Abdominal canoa",video:"video/abdomen_canoa.mp4"}
+],
+
+13:[
+{nome:"Calcanhar glúteo",video:"video/calcanhar_no_gluteo.mp4"},
+{nome:"Polichinelo",video:"video/polichinelo.mp4"},
+{nome:"Agachamento",video:"video/agachamento.mp4"},
+{nome:"Agachamento sumô",video:"video/agachamento_sumo.mp4"}
+],
+
+15:[
+{nome:"Agachamento rotação",video:"video/agachamento_com_rotacao_de_tronco.mp4"},
+{nome:"Toque cruzado",video:"video/agachamento_com_toque_cruzado.mp4"},
+{nome:"Panturrilha",video:"video/panturilha.mp4"},
+{nome:"Abdominal calcanhar",video:"video/abdomen_calcanhar.mp4"}
+],
+
+17:[
+{nome:"Calcanhar glúteo",video:"video/calcanhar_no_gluteo.mp4"},
+{nome:"Polichinelo",video:"video/polichinelo.mp4"},
+{nome:"Agachamento desenvolvimento",video:"video/agachamento_desenvolvimento.mp4"},
+{nome:"Agachamento sumô",video:"video/agachamento_sumo.mp4"}
+],
+
+19:[
+{nome:"Agachamento rotação",video:"video/agachamento_com_rotacao_de_tronco.mp4"},
+{nome:"Toque cruzado",video:"video/agachamento_com_toque_cruzado.mp4"},
+{nome:"Panturrilha",video:"video/panturilha.mp4"},
+{nome:"Abdominal calcanhar",video:"video/abdomen_calcanhar.mp4"}
+],
+
+21:[
+{nome:"Polichinelo frontal",video:"video/polichinelo_invertida.mp4"},
+{nome:"Afundo",video:"video/afundo.mp4"},
+{nome:"Escalador",video:"video/escalador.mp4"},
+{nome:"Superman",video:"video/superman.mp4"}
+]
+
+}
+
+/* ===== RENDER ===== */
+const container=document.getElementById("treinos")
+
+for(let dia=1;dia<=21;dia++){
+
+    let div=document.createElement("div")
+    div.className="treino"
+    div.id="treino"+dia
+
+    let html=`<h2>Treino ${dia}</h2>`
+
+    if(Array.isArray(treinos[dia])){
+        treinos[dia].forEach((ex,i)=>{
+
+            html+=`<div class="exercicio">
+            <strong>${ex.nome}</strong>
+            <video controls>
+                <source src="${ex.video}" type="video/mp4">
+            </video>
+            <div class="series-container">`
+
+            for(let s=1;s<=4;s++){
+                totalSeries++
+
+                let timerID=`t${dia}${i}${s}`
+                let checkID=`c${dia}${i}${s}`
+                let restID=`r${dia}${i}${s}`
+
+                html+=`
+                <div class="serie">
+                <button onclick="iniciarSerie(40,'${timerID}','${checkID}','${restID}')">Iniciar</button>
+                <div id="${timerID}" class="timer">0</div>
+                <div id="${restID}" class="rest"></div>
+                <input type="checkbox" id="${checkID}">
+                </div>`
+            }
+
+            html+=`</div></div>`
+        })
+    }
+
+    if(treinos[dia] && treinos[dia].imagem){
+        html+=`
+        <div style="text-align:center;margin-top:20px;">
+            <h3>🔥 Desafio do Dia</h3>
+            <img src="${treinos[dia].imagem}">
+        </div>`
+    }
+
+    div.innerHTML=html
+    container.appendChild(div)
+}
+
+carregarProgresso()
+setTimeout(updateProgress,300)
+
+</script>
+
+</body>
+</html>

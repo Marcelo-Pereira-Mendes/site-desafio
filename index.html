@@ -1,0 +1,283 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Desafio 21 Dias - Marcelo Mendes</title>
+
+<!-- Bootstrap -->
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700;900&display=swap" rel="stylesheet">
+
+<style>
+
+/* BASE */
+body{
+    margin:0;
+    font-family:'Inter',sans-serif;
+    color:#FFF;
+    background:#000;
+    overflow-x:hidden;
+}
+
+/* HERO */
+.hero{
+    position:relative;
+    text-align:center;
+    padding:120px 20px 100px;
+    display:flex;
+    flex-direction:column;
+    justify-content:center;
+    align-items:center;
+    min-height:100vh;
+    background: linear-gradient(135deg,#000,#111,#222);
+}
+
+.hero::before{
+    content:"";
+    position:absolute;
+    top:0;
+    left:50%;
+    transform:translateX(-50%);
+    width:100%;
+    max-width:1200px;
+    height:100%;
+    background: url('imagem/telaPrincipal.png') center/contain no-repeat;
+    opacity:0.5;
+    z-index:0;
+}
+
+.hero h1{
+    font-size:56px;
+    font-weight:900;
+    z-index:1;
+    text-shadow:0 0 15px #00FFFF,0 0 25px #FF00FF;
+}
+
+.hero p{
+    font-style: italic;
+    font-size:22px;
+    z-index:1;
+    color:#EAEAEA;
+}
+
+/* BOTÃO */
+.btn-custom{
+    width: 250px;
+    z-index:1;
+    background: linear-gradient(135deg,#00FFFF,#FF00FF);
+    color:#FFF;
+    border:none;
+    font-weight: bold;
+    border-radius:50px;
+    padding:16px 36px;
+    box-shadow:0 0 15px #00FFFF,0 0 25px #FF00FF;
+}
+
+/* MODAL */
+.modal-content{
+    background:#000;
+    border-radius:20px;
+}
+
+.form-control{
+    background:#111;
+    border:1px solid #333;
+    color:#FFF;
+}
+
+/* ALERTA FIXO */
+#alertMsg{
+    display:none;
+    position:fixed;
+    top:20px;
+    left:50%;
+    transform:translateX(-50%);
+    background:#FF00FF;
+    color:#FFF;
+    padding:12px 20px;
+    border-radius:10px;
+    z-index:9999;
+}
+
+/* ADMIN */
+#adminPanel{
+    display:none;
+    padding:40px 20px;
+    max-width:650px;
+    margin:auto;
+}
+
+.card-box{
+    background:#111;
+    padding:15px;
+    border-radius:15px;
+    margin-bottom:10px;
+    display:flex;
+    justify-content:space-between;
+}
+
+</style>
+</head>
+
+<body>
+
+<!-- HERO -->
+<section class="hero" id="home">
+<h1>DESAFIO 21 DIAS</h1>
+<p>Transforme seu corpo com método estratégico</p>
+<button class="btn btn-custom" data-bs-toggle="modal" data-bs-target="#loginModal">Aceitar</button>
+</section>
+
+<!-- LOGIN -->
+<div class="modal fade" id="loginModal">
+<div class="modal-dialog modal-dialog-centered">
+<div class="modal-content">
+<div class="modal-body">
+
+<input id="user" class="form-control mb-2" placeholder="Login">
+<input id="pass" type="password" class="form-control mb-3" placeholder="Senha">
+<button class="btn btn-custom w-100" onclick="login()">Entrar</button>
+
+</div>
+</div>
+</div>
+</div>
+
+<!-- ALERTA -->
+<div id="alertMsg"></div>
+
+<!-- ADMIN -->
+<section id="adminPanel">
+<h2 class="text-center mb-3">PAINEL ADMIN</h2>
+
+<input id="novoUser" class="form-control mb-2" placeholder="Login">
+<input id="novaPass" class="form-control mb-2" placeholder="Senha">
+<input id="novoTel" class="form-control mb-3" placeholder="551999999999">
+<button class="btn btn-custom w-100 mb-3" onclick="cadastrar()">Cadastrar</button>
+
+<div id="lista"></div>
+</section>
+
+<!-- SCRIPT -->
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+
+<script>
+
+const CONFIG = {
+    adminUser:"Desenvolvedor",
+    adminPass:"Taekwondo3028*"
+};
+
+let alunos = JSON.parse(localStorage.getItem("alunos")) || [];
+
+function get(id){ return document.getElementById(id); }
+function safe(v){ return (v||"").trim(); }
+
+// ALERTA
+function showAlert(msg){
+    let a = get("alertMsg");
+    a.innerText = msg;
+    a.style.display="block";
+    setTimeout(()=>a.style.display="none",3000);
+}
+
+// LOGIN
+function login(){
+    let user = safe(get("user").value);
+    let pass = safe(get("pass").value);
+
+    // ADMIN
+    if(user === CONFIG.adminUser && pass === CONFIG.adminPass){
+        get("home").style.display="none";
+        get("adminPanel").style.display="block";
+        listarAlunos();
+        return;
+    }
+
+    let usuario = alunos.find(a => a.user === user);
+
+    if(!usuario){
+        showAlert("Usuário não encontrado");
+        return;
+    }
+
+    if(usuario.pass !== pass){
+        showAlert("Senha incorreta");
+        return;
+    }
+
+    window.location.href="treino.html";
+}
+
+// CADASTRO
+function cadastrar(){
+    let user = safe(get("novoUser").value);
+    let pass = safe(get("novaPass").value);
+    let tel = safe(get("novoTel").value);
+
+    if(!user||!pass||!tel){
+        showAlert("Preencha todos os campos");
+        return;
+    }
+
+    if(alunos.some(a => a.user === user || a.pass === pass)){
+        showAlert("Login ou senha já existe");
+        return;
+    }
+
+    alunos.push({user,pass,tel});
+    localStorage.setItem("alunos", JSON.stringify(alunos));
+
+    let msg = `Olá! Seu login: ${user} Senha: ${pass}`;
+    window.open(`https://wa.me/${tel}?text=${encodeURIComponent(msg)}`);
+
+    get("novoUser").value="";
+    get("novaPass").value="";
+    get("novoTel").value="";
+
+    listarAlunos();
+}
+
+// LISTAR
+function listarAlunos(){
+    let html="";
+    alunos.forEach((a,i)=>{
+        html+=`
+        <div class="card-box">
+            <div>
+                <strong>${a.user}</strong><br>
+                ${a.pass}<br>
+                ${a.tel}
+            </div>
+            <div>
+                <button onclick="enviar(${i})">Whats</button>
+                <button onclick="remover(${i})">Excluir</button>
+            </div>
+        </div>`;
+    });
+    get("lista").innerHTML=html;
+}
+
+// WHATS
+function enviar(i){
+    let a = alunos[i];
+    let msg = `Olá! Seu login: ${a.user} Senha: ${a.pass}`;
+    window.open(`https://wa.me/${a.tel}?text=${encodeURIComponent(msg)}`);
+}
+
+// REMOVER
+function remover(i){
+    if(confirm("Excluir aluno?")){
+        alunos.splice(i,1);
+        localStorage.setItem("alunos", JSON.stringify(alunos));
+        listarAlunos();
+    }
+}
+
+listarAlunos();
+
+</script>
+
+</body>
+</html>

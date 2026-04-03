@@ -1,0 +1,319 @@
+/* ============================= */
+/* RESET GLOBAL */
+/* ============================= */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+/* ============================= */
+/* BODY */
+/* ============================= */
+body {
+    font-family: 'Inter', sans-serif;
+    color: #fff;
+    min-height: 100vh;
+    background: linear-gradient(180deg, #000000, #050505, #000000);
+}
+
+/* ============================= */
+/* NAVBAR */
+/* ============================= */
+.navbar {
+    background: rgba(0,0,0,0.85);
+    backdrop-filter: blur(10px);
+    border-bottom: 1px solid rgba(255,255,255,0.05);
+    padding: 12px 0;
+}
+.navbar-brand {
+    font-weight: 700;
+    letter-spacing: 1px;
+}
+
+/* ============================= */
+/* HERO */
+/* ============================= */
+.hero {
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    padding: 140px 0 80px;
+    background: radial-gradient(circle at center, rgba(255,255,255,0.03), transparent 60%), #000;
+    text-align: center;
+}
+.hero h1 {
+    font-size: 3.3rem;
+    font-weight: 900;
+    line-height: 1.1;
+    margin-bottom: 20px;
+}
+.hero h1 span {
+    background: linear-gradient(90deg,#00f5ff,#ff00c8);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+}
+.hero p {
+    font-size: 1.15rem;
+    color: #d0d0d0;
+    margin-bottom: 35px;
+}
+.hero-img {
+    max-width: 100%;
+    height: auto;
+    object-fit: contain;
+    filter: contrast(1.05) saturate(1.05) drop-shadow(0 15px 40px rgba(0,0,0,0.8));
+    animation: flutuar 5s ease-in-out infinite;
+    transition: transform 0.4s;
+    margin: auto;
+}
+.hero-img:hover {
+    transform: scale(1.03);
+}
+
+/* ============================= */
+/* BADGE HERO */
+/* ============================= */
+.hero-badge {
+    display: inline-block;
+    padding: 9px 20px;
+    background: linear-gradient(90deg,#00f5ff,#ff00c8,#00f5ff);
+    background-size: 200%;
+    border-radius: 30px;
+    font-weight: 700;
+    font-size: 0.85rem;
+    margin-bottom: 20px;
+    animation: badgeGlow 4s linear infinite;
+    box-shadow: 0 0 15px rgba(255,0,200,0.4);
+}
+@keyframes badgeGlow {
+    0% { background-position: 0%; }
+    100% { background-position: 200%; }
+}
+@keyframes flutuar {
+    0% { transform: translateY(0px); }
+    50% { transform: translateY(-15px); }
+    100% { transform: translateY(0px); }
+}
+
+/* ============================= */
+/* BOTÃO CUSTOMIZADO */
+/* ============================= */
+.btn-custom {
+    background: linear-gradient(90deg,#00f5ff,#ff00c8);
+    border: none;
+    padding: 17px 46px;
+    border-radius: 60px;
+    font-weight: 700;
+    font-size: 1rem;
+    color: white;
+    text-decoration: none;
+    box-shadow: 0 0 0 rgba(255,0,200,0.6);
+    animation: pulse 2s infinite;
+    transition: transform 0.3s ease, opacity 0.3s ease;
+}
+.btn-custom:hover {
+    transform: scale(1.05);
+    opacity: 0.9;
+}
+@keyframes pulse {
+    0% { box-shadow:0 0 0 0 rgba(255,0,200,0.6); }
+    70% { box-shadow:0 0 0 18px rgba(255,0,200,0); }
+    100% { box-shadow:0 0 0 0 rgba(255,0,200,0); }
+}
+
+/* ============================= */
+/* FOOTER */
+/* ============================= */
+footer {
+    background: #000;
+    padding: 40px;
+    text-align: center;
+    color: #777;
+    font-size: 14px;
+    border-top: 1px solid rgba(255,255,255,0.05);
+}
+
+/* ============================= */
+/* PAINEL ADMIN */
+/* ============================= */
+#adminPanel {
+    display: none;
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 90%;
+    max-width: 600px;
+    background: #000;
+    z-index: 2000;
+    overflow: auto;
+    padding: 35px;
+    border-radius: 20px;
+    box-shadow: 0 20px 60px rgba(0,0,0,0.8);
+}
+
+/* ============================= */
+/* PAINEL ALUNO */
+/* ============================= */
+#painelAluno {
+    display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: #000;
+    z-index: 2000;
+    overflow: auto;
+    padding: 2rem 1rem;
+    color: #FFFFFF;
+}
+
+/* CARD ALUNO COM DEGRADÊ SUAVE E GLOW */
+#painelAluno .card {
+    background: linear-gradient(145deg, #111111, #1a1a1a);
+    border-radius: 20px;
+    padding: 2rem;
+    max-height: 80vh;
+    overflow-y: auto;
+    box-shadow: 0 0 25px rgba(0,255,255,0.1);
+    border: 1px solid #222;
+    position: relative;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+#painelAluno .card::before {
+    content: "";
+    position: absolute;
+    top: -10px;
+    left: -10px;
+    right: -10px;
+    bottom: -10px;
+    border-radius: 25px;
+    background: linear-gradient(45deg, #00f0ff22, #00ffaa33, #00f0ff22);
+    z-index: -1;
+    filter: blur(20px);
+    opacity: 0.7;
+    animation: glow 3s ease-in-out infinite alternate;
+}
+@keyframes glow {
+    0% { transform: rotate(0deg); opacity: 0.6; }
+    100% { transform: rotate(360deg); opacity: 0.8; }
+}
+
+/* Títulos do painel do aluno */
+#painelAluno h1 { font-size: 1.8rem; text-align: center; color: #00f0ff; margin-bottom: 1rem; text-shadow:0 0 5px #00f0ff44;}
+#painelAluno h2 { font-size: 1.4rem; border-bottom: 1px solid #00f0ff33; padding-bottom:0.5rem; color: #00e0ff; margin-bottom:1rem;}
+#painelAluno h3 { font-size: 1.2rem; color: #00ffaa; margin-top:1rem; margin-bottom:0.5rem;}
+
+/* Listas */
+#painelAluno ul { list-style: none; padding-left: 1rem; margin-bottom: 1rem; }
+#painelAluno ul li {
+    background: #222;
+    margin-bottom: 0.5rem;
+    padding: 0.5rem 1rem;
+    border-radius: 12px;
+    border-left: 4px solid #00f0ff;
+    transition: background 0.3s ease, transform 0.2s ease, box-shadow 0.3s ease;
+}
+#painelAluno ul li:hover {
+    background: #00f0ff11;
+    transform: translateX(5px);
+    box-shadow: 0 0 10px #00f0ff55;
+}
+
+/* Plano de 21 dias */
+#painelAluno #plano-21-dias {
+    background: #222;
+    padding: 1rem;
+    border-radius: 15px;
+    margin-top: 1rem;
+    box-shadow: inset 0 0 15px #00f0ff22;
+}
+
+/* Botão Sair */
+#painelAluno button {
+    display: block;
+    margin: 2rem auto 0 auto;
+    background: none;
+    border: none;
+    color: #aaa;
+    font-size: 14px;
+    cursor: pointer;
+    transition: color 0.3s ease, text-shadow 0.3s ease;
+}
+#painelAluno button:hover {
+    color: #00f0ff;
+    text-shadow: 0 0 5px #00f0ff55;
+    text-decoration: underline;
+}
+
+/* Scrollbar customizado */
+#painelAluno .card::-webkit-scrollbar { width: 8px; }
+#painelAluno .card::-webkit-scrollbar-track { background: #111; border-radius: 10px; }
+#painelAluno .card::-webkit-scrollbar-thumb { background: #00f0ff55; border-radius: 10px; }
+#painelAluno .card::-webkit-scrollbar-thumb:hover { background: #00ffaa; }
+
+/* RESPONSIVIDADE */
+@media (max-width: 768px) {
+    #painelAluno h1 { font-size: 1.5rem; }
+    #painelAluno h2 { font-size: 1.2rem; }
+    #painelAluno h3 { font-size: 1rem; }
+    #painelAluno .card { padding: 1.5rem; }
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

@@ -1,0 +1,276 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Controle de Peso</title>
+
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+
+<style>
+
+/* ===== MOBILE FIRST ===== */
+body {
+  margin: 0;
+  font-family: Arial, Helvetica, sans-serif;
+  color: #FFFFFF;
+
+  background: linear-gradient(rgba(0,0,0,0.75), rgba(0,0,0,0.75)),
+              url('https://copilot.microsoft.com/th/id/BCO.c9e7c156-35cf-4bb2-a60e-49f20025abf2.png');
+
+  background-size: cover;
+  background-position: center;
+}
+
+/* ===== CONTAINER MOBILE ===== */
+.container {
+  padding: 15px;
+}
+
+/* ===== TÍTULO ===== */
+h2 {
+  text-align: center;
+  font-weight: 800;
+  font-size: 22px;
+  margin-bottom: 20px;
+}
+
+/* ===== CARD ===== */
+.card {
+  background: rgba(28,28,28,0.95);
+  border-radius: 16px;
+  box-shadow: 0 10px 30px rgba(0,0,0,0.6);
+  width: 100%;
+}
+
+/* ===== INPUTS (TOUCH FRIENDLY) ===== */
+.form-control {
+  background: #1f1f1f;
+  color: #ffffff;
+  border-radius: 12px;
+  border: 1px solid #444;
+  padding: 14px; /* maior toque */
+  font-size: 16px;
+}
+
+.form-control::placeholder {
+  color: #aaaaaa;
+}
+
+.form-control:focus {
+  border: 1px solid #00f5ff;
+  box-shadow: 0 0 10px rgba(0,245,255,0.5);
+}
+
+/* ===== BOTÕES ===== */
+.btn-custom {
+  background: linear-gradient(135deg, #00f5ff, #6a00ff, #ff00c8);
+  color: white;
+  border-radius: 12px;
+  border: none;
+  font-weight: 600;
+  padding: 14px;
+  font-size: 16px;
+}
+
+.btn-secondary {
+  background: #444;
+  border: none;
+  padding: 14px;
+}
+
+/* ===== TEXTO ===== */
+#pesquisaSection,
+#pesquisaSection p,
+#pesquisaSection span,
+#pesquisaSection strong {
+  color: #FFFFFF !important;
+}
+
+.kg {
+  color: #00f5ff;
+  font-weight: bold;
+}
+
+/* ===== BOTÃO TREINO (MOBILE AJUSTADO) ===== */
+.btn-treino{
+  position:fixed;
+  bottom:15px;
+  right:15px;
+  background: linear-gradient(135deg,#ff00c8,#00f5ff);
+  color:#000;
+  font-weight:800;
+  padding:14px 18px;
+  border-radius:50px;
+  text-decoration:none;
+  box-shadow:0 0 15px #ff00c8,0 0 25px #00f5ff;
+  z-index:9999;
+}
+
+/* ===== TABLET ===== */
+@media (min-width:768px){
+  h2{
+    font-size:26px;
+  }
+
+  .container{
+    max-width:500px;
+    margin:auto;
+  }
+}
+
+/* ===== DESKTOP ===== */
+@media (min-width:1024px){
+  h2{
+    font-size:28px;
+  }
+
+  .container{
+    max-width:600px;
+  }
+}
+
+</style>
+</head>
+
+<body>
+
+<div class="container mt-4">
+
+<h2>Sistema de Controle de Peso Corporal</h2>
+
+<!-- LOGIN -->
+<div id="loginSection" class="card p-3 mt-3">
+  <h4>Login</h4>
+
+  <input type="text" id="login" class="form-control mb-2" placeholder="Digite seu login">
+  <input type="password" id="senha" class="form-control mb-3" placeholder="Digite sua senha">
+
+  <button class="btn btn-custom w-100 mb-2" onclick="verificarLogin()">Entrar</button>
+  <button class="btn btn-custom w-100" onclick="mostrarCadastro()">Cadastrar</button>
+</div>
+
+<!-- CADASTRO -->
+<div id="cadastroSection" class="card p-3 mt-3 d-none">
+  <h4>Cadastro</h4>
+
+  <input type="text" id="nome" class="form-control mb-2" placeholder="Nome">
+  <input type="date" id="dataInicial" class="form-control mb-2" onchange="liberarPesoFinal()">
+  <input type="number" id="pesoInicial" class="form-control mb-2" placeholder="Peso Inicial">
+  <input type="number" id="pesoFinal" class="form-control mb-2" placeholder="Peso Final" disabled>
+  <input type="text" id="dataFinal" class="form-control mb-3" readonly>
+
+  <button class="btn btn-custom w-100 mb-2" onclick="salvarCadastro()">Salvar</button>
+  <button class="btn btn-custom w-100 mb-2" onclick="removerCadastro()">Remover</button>
+  <button class="btn btn-secondary w-100" onclick="voltarLogin()">Voltar</button>
+</div>
+
+<!-- RESULTADO -->
+<div id="pesquisaSection" class="card p-3 mt-3 d-none">
+  <h4>Evolução do Aluno</h4>
+
+  <p><strong>Nome:</strong> <span id="resNome"></span></p>
+  <p><strong>Data Inicial:</strong> <span id="resDataInicial"></span></p>
+  <p><strong>Peso Inicial:</strong> <span id="resPesoInicial"></span><span class="kg">kg</span></p>
+  <p><strong>Peso Final:</strong> <span id="resPesoFinal"></span><span class="kg">kg</span></p>
+  <p><strong>Data Final:</strong> <span id="resDataFinal"></span></p>
+
+  <button class="btn btn-secondary w-100" onclick="voltarLogin()">Sair</button>
+</div>
+
+</div>
+
+<!-- BOTÃO TREINO -->
+<a href="treino.html" class="btn-treino">Treino</a>
+
+<script>
+
+/* ===== SEU JS ORIGINAL (INALTERADO) ===== */
+const cadastroSection = document.getElementById('cadastroSection');
+const loginSection = document.getElementById('loginSection');
+const pesquisaSection = document.getElementById('pesquisaSection');
+
+function mostrarCadastro(){
+  cadastroSection.classList.remove('d-none');
+  loginSection.classList.add('d-none');
+}
+
+function voltarLogin(){
+  loginSection.classList.remove('d-none');
+  cadastroSection.classList.add('d-none');
+  pesquisaSection.classList.add('d-none');
+}
+
+function liberarPesoFinal(){
+  let data = document.getElementById("dataInicial").value;
+  if(data){
+    let dt = new Date(data);
+    dt.setDate(dt.getDate() + 20);
+    document.getElementById("dataFinal").value = dt.toLocaleDateString('pt-BR');
+    document.getElementById("pesoFinal").disabled = new Date() < dt;
+  }
+}
+
+function salvarCadastro(){
+  let login = document.getElementById("login").value;
+  let senha = document.getElementById("senha").value;
+
+  if(!login || !senha){
+    alert("Preencha login e senha!");
+    return;
+  }
+
+  let aluno = {
+    login,
+    senha,
+    nome: document.getElementById("nome").value,
+    dataInicial: document.getElementById("dataInicial").value,
+    pesoInicial: document.getElementById("pesoInicial").value,
+    pesoFinal: document.getElementById("pesoFinal").value,
+    dataFinal: document.getElementById("dataFinal").value
+  };
+
+  localStorage.setItem(login, JSON.stringify(aluno));
+  alert("Salvo com sucesso!");
+}
+
+function verificarLogin(){
+  let login = document.getElementById("login").value;
+  let senha = document.getElementById("senha").value;
+
+  let dados = localStorage.getItem(login);
+
+  if(!dados){
+    alert("Usuário não encontrado!");
+    return;
+  }
+
+  let aluno = JSON.parse(dados);
+
+  if(aluno.senha !== senha){
+    alert("Senha incorreta!");
+    return;
+  }
+
+  pesquisaSection.classList.remove('d-none');
+  loginSection.classList.add('d-none');
+
+  document.getElementById('resNome').innerText = aluno.nome || "-";
+  document.getElementById('resDataInicial').innerText = aluno.dataInicial || "-";
+  document.getElementById('resPesoInicial').innerText = aluno.pesoInicial || "-";
+  document.getElementById('resPesoFinal').innerText = aluno.pesoFinal || "Não informado";
+  document.getElementById('resDataFinal').innerText = aluno.dataFinal || "-";
+}
+
+function removerCadastro(){
+  let login = document.getElementById("login").value;
+  if(confirm("Excluir cadastro?")){
+    localStorage.removeItem(login);
+    alert("Removido!");
+  }
+}
+
+</script>
+
+</body>
+</html>
