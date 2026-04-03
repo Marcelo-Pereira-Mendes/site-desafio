@@ -82,7 +82,7 @@ body{
     transform:scale(1.05);
 }
 
-/* 🔥 MODAL COM BORDA 2PX */
+/* MODAL */
 .modal-content{
     background:#000;
     border-radius:20px;
@@ -97,7 +97,7 @@ body{
     color:#FFF;
 }
 
-/* 👇 ADICIONADO (CURSOR POINTER) */
+/* CURSOR */
 button,
 input{
     cursor:pointer;
@@ -218,6 +218,12 @@ let alunos = JSON.parse(localStorage.getItem("alunos")) || [];
 function get(id){ return document.getElementById(id); }
 function safe(v){ return (v||"").trim(); }
 
+/* 🔥 LIMPAR INPUT LOGIN */
+function limparLogin(){
+    get("user").value = "";
+    get("pass").value = "";
+}
+
 /* ALERTA */
 function showAlert(msg){
     let a = get("alertMsg");
@@ -235,6 +241,7 @@ function login(){
         get("home").style.display="none";
         get("adminPanel").style.display="block";
         listarAlunos();
+        limparLogin(); // 🔥 limpa após login admin
         return;
     }
 
@@ -250,6 +257,7 @@ function login(){
         return;
     }
 
+    limparLogin(); // 🔥 limpa antes de redirecionar
     window.location.href="treino.html";
 }
 
@@ -315,8 +323,12 @@ function remover(i){
         alunos.splice(i,1);
         localStorage.setItem("alunos", JSON.stringify(alunos));
         listarAlunos();
+        limparLogin(); // 🔥 limpa após exclusão
     }
 }
+
+/* 🔥 LIMPAR AO ABRIR MODAL */
+document.getElementById('loginModal').addEventListener('show.bs.modal', limparLogin);
 
 listarAlunos();
 
