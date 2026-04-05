@@ -10,7 +10,6 @@
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700;900&display=swap" rel="stylesheet">
 
 <style>
-
 /* BASE */
 body{
     margin:0;
@@ -84,17 +83,29 @@ body{
 
 /* MODAL */
 .modal-content{
-    background:#000;
+    background:#111;
     border-radius:20px;
     border:2px solid #00FFFF;
     box-shadow:0 0 10px #00FFFF40;
 }
 
-/* INPUTS */
+/* INPUTS LOGIN - MAIS VISÍVEIS */
 .form-control{
-    background:#111;
-    border:1px solid #333;
-    color:#FFF;
+    background:#222; /* clareou do #111 para #222 */
+    border:1px solid #00FFFF; /* borda neon para contraste */
+    color:#EAEAEA; /* texto mais visível */
+    padding:12px;
+    border-radius:8px;
+}
+
+.form-control::placeholder{
+    color:#AAA; /* placeholder legível */
+}
+
+.form-control:focus{
+    outline:none;
+    border:1px solid #FF00FF;
+    box-shadow:0 0 8px #FF00FF50;
 }
 
 /* CURSOR */
@@ -237,6 +248,7 @@ function login(){
     let user = safe(get("user").value);
     let pass = safe(get("pass").value);
 
+    // LOGIN ADMIN
     if(user === CONFIG.adminUser && pass === CONFIG.adminPass){
         get("home").style.display="none";
         get("adminPanel").style.display="block";
@@ -245,6 +257,7 @@ function login(){
         return;
     }
 
+    // LOGIN ALUNO
     let usuario = alunos.find(a => a.user === user);
 
     if(!usuario){
@@ -258,7 +271,7 @@ function login(){
     }
 
     limparLogin(); // 🔥 limpa antes de redirecionar
-    window.location.href="treino.html";
+    window.location.href="treino.html"; // 🔥 redireciona para treino.html
 }
 
 /* CADASTRO */
