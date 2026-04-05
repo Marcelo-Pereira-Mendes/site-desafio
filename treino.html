@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html lang="pt-br">
 <head>
@@ -13,22 +14,17 @@ body{
     background:#000;
 }
 
+/* ===== HEADER ===== */
 header{
     text-align:center;
     padding:30px 20px;
     background:rgba(0,0,0,0.6);
     border-bottom:1px solid rgba(255,255,255,0.08);
 }
-header h1{
-    margin:0;
-    font-size:2.2em;
-    font-weight:800;
-}
-header p{
-    margin-top:6px;
-    color:#00f5ff;
-}
+header h1{font-size:2.2em;font-weight:800;}
+header p{color:#00f5ff;}
 
+/* ===== MENU DIAS ===== */
 .seletorTreino{
     display:flex;
     flex-wrap:wrap;
@@ -46,12 +42,14 @@ header p{
     cursor:pointer;
 }
 
+/* ===== CONTAINER ===== */
 .container{
     max-width:900px;
     margin:auto;
     padding:15px;
 }
 
+/* ===== PROGRESSO ===== */
 .progress-bar{
     height:24px;
     background:#0a0a0a;
@@ -71,6 +69,7 @@ header p{
     background:linear-gradient(90deg,#00f5ff,#ff00c8);
 }
 
+/* ===== TREINO ===== */
 .treino{
     background:rgba(10,10,10,0.9);
     padding:20px;
@@ -82,15 +81,14 @@ header p{
     padding:18px 0;
     border-bottom:1px solid rgba(255,255,255,0.08);
 }
-.exercicio strong{
-    color:#00f5ff;
-}
+.exercicio strong{color:#00f5ff;}
 
-video, img{
+video,img{
     width:100%;
     border-radius:10px;
 }
 
+/* ===== SÉRIES ===== */
 .series-container{
     display:grid;
     grid-template-columns:repeat(auto-fit,minmax(120px,1fr));
@@ -118,11 +116,9 @@ video, img{
     font-size:26px;
     color:#00f5ff;
 }
-.rest{
-    color:#ff00c8;
-}
+.rest{color:#ff00c8;}
 
-/* BOTÃO PESO */
+/* ===== BOTÃO PESO ===== */
 .btn-peso{
     position:fixed;
     bottom:20px;
@@ -134,12 +130,6 @@ video, img{
     border-radius:50px;
     text-decoration:none;
     box-shadow:0 0 15px #00f5ff,0 0 25px #ff00c8;
-    z-index:9999;
-    transition:0.3s;
-}
-.btn-peso:hover{
-    transform:scale(1.08);
-    box-shadow:0 0 25px #00f5ff,0 0 40px #ff00c8;
 }
 </style>
 </head>
@@ -161,7 +151,6 @@ video, img{
 <div id="treinos"></div>
 </div>
 
-<!-- BOTÃO PESO -->
 <a href="peso.html" class="btn-peso">Peso Kg</a>
 
 <script>
@@ -252,99 +241,97 @@ for(let i=1;i<=21;i++){
 }
 
 /* ===== TREINOS ===== */
-
-
 const treinos = {
 
 1: [
     {nome:"Corrida no lugar", video:"video/corrida_no_lugar.mp4"},
     {nome:"Agachamento paredão", video:"video/agachamento_na_parede.mp4"},
     {nome:"Polichinelo mãos na cintura", video:"video/polichinelo_maos_na_cintura.mp4"},
-    {nome:"Prancha isométrica", video:"video/prancha.mp4"}
+    {nome:"Prancha", video:"video/prancha.mp4"}
 ],
 
-2: {imagem:"imagem/corrida_desafio.png"},
+2:{imagem:"imagem/corrida_desafio.png"},
 
 3: [
     {nome:"Polichinelo", video:"video/polichinelo.mp4"},
-    {nome:"Recuo com extensão de braço", video:"video/recuo_alternado_com_extensao_de_braco.mp4"},
-    {nome:"Agachamento com salto", video:"video/agachamento_com_salto.mp4"},
-    {nome:"Elevação lateral entre pernas", video:"video/elevacao_lateral.mp4"}
+    {nome:"Recuo braço", video:"video/recuo_alternado_com_extensao_de_braco.mp4"},
+    {nome:"Agachamento salto", video:"video/agachamento_com_salto.mp4"},
+    {nome:"Elevação especial", video:"video/elevacao_lateral.mp4"}
 ],
 
-4: {imagem:"imagem/corrida_desafio.png"},
+4:{imagem:"imagem/corrida_desafio.png"},
 
 5: [
     {nome:"Corrida no lugar", video:"video/corrida_no_lugar.mp4"},
-    {nome:"Agachamento paredão", video:"video/agachamento_parede.mp4"},
+    {nome:"Agachamento parede", video:"video/agachamento_na_parede.mp4"},
     {nome:"Polichinelo mãos na cintura", video:"video/polichinelo_maos_na_cintura.mp4"},
-    {nome:"Prancha isométrica", video:"video/prancha.mp4"}
+    {nome:"Prancha", video:"video/prancha.mp4"}
 ],
 
-6: {imagem:"imagem/corrida_desafio.png"},
+6:{imagem:"imagem/corrida_desafio.png"},
 
 7: [
-    {nome:"Corrida no lugar", video:"video/corrida_no_lugar.mp4"},
-    {nome:"Agachamento livre", video:"video/agachamento.mp4"},
-    {nome:"Elevação joelho alternado", video:"video/elevacao_de_joelho.mp4"},
-    {nome:"Abdômen canoa", video:"video/abdomen_canoa.mp4"}
+    {nome:"Corrida", video:"video/corrida_no_lugar.mp4"},
+    {nome:"Agachamento", video:"video/agachamento.mp4"},
+    {nome:"Joelho alto", video:"video/elevacao_de_joelho.mp4"},
+    {nome:"Canoa", video:"video/abdomen_canoa.mp4"}
 ],
 
-8: {imagem:"imagem/corrida_desafio.png"},
+8:{imagem:"imagem/corrida_desafio.png"},
 
 9: [
     {nome:"Polichinelo", video:"video/polichinelo.mp4"},
-    {nome:"Recuo com extensão de braço", video:"video/recuo_bracos.mp4"},
-    {nome:"Agachamento com salto", video:"video/agachamento_com_salto.mp4"},
-    {nome:"Elevação lateral entre pernas", video:"video/elevacao_lateral.mp4"}
+    {nome:"Recuo", video:"video/recuo_bracos.mp4"},
+    {nome:"Salto", video:"video/agachamento_com_salto.mp4"},
+    {nome:"Lateral", video:"video/elevacao_joelho+elevação_lateral.mp4"}
 ],
 
-10: {imagem:"imagem/corrida_desafio.png"},
+10:{imagem:"imagem/corrida_desafio.png"},
 
 11: [
-    {nome:"Elevação de joelho", video:"video/elevacao_de_joelho.mp4"},
-    {nome:"Agachamento livre", video:"video/agachamento.mp4"},
-    {nome:"Elevação joelho alternado", video:"video/elevacao_de_joelho.mp4"},
-    {nome:"Abdômen canoa", video:"video/abdomen_canoa.mp4"}
+    {nome:"Joelho", video:"video/elevacao_de_joelho.mp4"},
+    {nome:"Agachamento", video:"video/agachamento.mp4"},
+    {nome:"Joelho", video:"video/elevacao_de_joelho.mp4"},
+    {nome:"Canoa", video:"video/abdomen_canoa.mp4"}
 ],
 
-12: {imagem:"imagem/corrida_desafio.png"},
+12:{imagem:"imagem/corrida_desafio.png"},
 
 13: [
-    {nome:"Calcanhar no glúteo", video:"video/calcanhar_no_gluteo.mp4"},
-    {nome:"Agachamento com extensão de braço", video:"video/agachamento_desenvolvimento.mp4"},
-    {nome:"Polichinelo simples", video:"video/polichinelo.mp4"},
-    {nome:"Agachamento sumo taça", video:"video/agachamento_sumo.mp4"}
+    {nome:"Calcanhar", video:"video/calcanhar_no_gluteo.mp4"},
+    {nome:"Desenvolvimento", video:"video/agachamento_desenvolvimento.mp4"},
+    {nome:"Polichinelo", video:"video/polichinelo.mp4"},
+    {nome:"Sumo", video:"video/agachamento_sumo.mp4"}
 ],
 
-14: {imagem:"imagem/corrida_desafio.png"},
+14:{imagem:"imagem/corrida_desafio.png"},
 
 15: [
-    {nome:"Agachamento gira tronco", video:"video/agachamento_com_rotacao_de_tronco.mp4"},
-    {nome:"Toque cruzado (agachamento)", video:"video/agachamento_com_toque_cruzado.mp4"},
-    {nome:"Panturrilha parede", video:"video/panturrilha.mp4"},
-    {nome:"Abdômen toque calcanhar", video:"video/abdomen_calcanhar.mp4"}
+    {nome:"Rotação", video:"video/agachamento_com_rotacao_de_tronco.mp4"},
+    {nome:"Cruzado", video:"video/agachamento_com_toque_cruzado.mp4"},
+    {nome:"Panturrilha", video:"video/panturilha.mp4"},
+    {nome:"Calcanhar", video:"video/abdomen_calcanhar.mp4"}
 ],
 
-16: {imagem:"imagem/corrida_desafio.png"},
+16:{imagem:"imagem/corrida_desafio.png"},
 
 17: [
-    {nome:"Calcanhar no glúteo", video:"video/calcanhar_no_gluteo.mp4"},
-    {nome:"Agachamento com extensão de braço", video:"video/agachamento_desenvolvimento.mp4"},
-    {nome:"Polichinelo simples", video:"video/polichinelo.mp4"},
-    {nome:"Agachamento sumo taça", video:"video/agachamento_sumo.mp4"}
+    {nome:"Calcanhar", video:"video/calcanhar_no_gluteo.mp4"},
+    {nome:"Desenvolvimento", video:"video/agachamento_desenvolvimento.mp4"},
+    {nome:"Polichinelo", video:"video/polichinelo.mp4"},
+    {nome:"Sumo", video:"video/agachamento_sumo.mp4"}
 ],
 
-18: {imagem:"imagem/corrida_desafio.png"},
+18:{imagem:"imagem/corrida_desafio.png"},
 
 19: [
-    {nome:"Agachamento gira tronco", video:"video/agachamento_com_rotacao_de_tronco.mp4"},
-    {nome:"Toque cruzado (agachamento)", video:"video/agachamento_com_toque_cruzado.mp4"},
-    {nome:"Panturrilha parede", video:"video/panturrilha.mp4"},
-    {nome:"Abdômen toque calcanhar", video:"video/abdomen_calcanhar.mp4"}
+    {nome:"Rotação", video:"video/agachamento_com_rotacao_de_tronco.mp4"},
+    {nome:"Cruzado", video:"video/agachamento_com_toque_cruzado.mp4"},
+    {nome:"Panturrilha", video:"video/panturilha.mp4"},
+    {nome:"Calcanhar", video:"video/abdomen_calcanhar.mp4"}
 ],
 
-20: {imagem:"imagem/corrida_desafio.png"},
+20:{imagem:"imagem/corrida_desafio.png"},
 
 21: [
     {nome:"Polichinelo frontal", video:"video/polichinelo_invertida.mp4"},
@@ -369,9 +356,11 @@ for(let dia=1;dia<=21;dia++){
         treinos[dia].forEach((ex,i)=>{
             html+=`<div class="exercicio">
             <strong>${ex.nome}</strong>
-            <video controls preload="metadata">
-                <source src="${ex.video.toLowerCase()}" type="video/mp4">
+
+            <video controls preload="none">
+                <source data-src="${ex.video}" type="video/mp4">
             </video>
+
             <div class="series-container">`
 
             for(let s=1;s<=4;s++){
@@ -397,13 +386,33 @@ for(let dia=1;dia<=21;dia++){
         html+=`
         <div style="text-align:center;margin-top:20px;">
             <h3>🔥 Desafio do Dia</h3>
-            <img src="${treinos[dia].imagem.toLowerCase()}">
+            <img src="${treinos[dia].imagem}">
         </div>`
     }
 
     div.innerHTML=html
     container.appendChild(div)
 }
+
+/* ===== LAZY LOAD ===== */
+const videos = document.querySelectorAll("video")
+
+const observer = new IntersectionObserver(entries=>{
+    entries.forEach(entry=>{
+        if(entry.isIntersecting){
+            const video = entry.target
+            const source = video.querySelector("source")
+
+            if(source.dataset.src){
+                source.src = source.dataset.src
+                video.load()
+                observer.unobserve(video)
+            }
+        }
+    })
+})
+
+videos.forEach(video=>observer.observe(video))
 
 carregarProgresso()
 setTimeout(updateProgress,300)
