@@ -91,15 +91,15 @@ body{
 
 /* INPUTS LOGIN - MAIS VISÍVEIS */
 .form-control{
-    background:#222;
-    border:1px solid #00FFFF;
-    color:#EAEAEA;
+    background:#222; /* clareado para melhor contraste */
+    border:1px solid #00FFFF; /* borda neon */
+    color:#EAEAEA; /* texto mais visível */
     padding:12px;
     border-radius:8px;
 }
 
 .form-control::placeholder{
-    color:#AAA;
+    color:#AAA; /* placeholder legível */
 }
 
 .form-control:focus{
@@ -257,7 +257,6 @@ function login(){
 
     // LOGIN ALUNO
     let usuario = alunos.find(a => a.user === user);
-
     if(!usuario){
         showAlert("Usuário não encontrado");
         return;
@@ -268,8 +267,8 @@ function login(){
         return;
     }
 
-    limparLogin(); // 🔥 limpa os campos
-    window.location.href="treino.html"; // 🔥 redireciona aluno
+    limparLogin(); // limpa os campos
+    window.location.href="treino.html"; // redireciona
 }
 
 /* CADASTRO */
@@ -283,19 +282,17 @@ function cadastrar(){
         return;
     }
 
-    if(alunos.some(a => a.user === user)){
-        showAlert("Login já existe");
+    if(alunos.some(a => a.user === user || a.pass === pass)){
+        showAlert("Login ou senha já existe");
         return;
     }
 
     alunos.push({user,pass,tel});
     localStorage.setItem("alunos", JSON.stringify(alunos));
 
-    // Mensagem no WhatsApp
     let msg = `Olá! Seu login: ${user} Senha: ${pass}`;
     window.open(`https://wa.me/${tel}?text=${encodeURIComponent(msg)}`);
 
-    // Limpa campos após cadastro
     get("novoUser").value="";
     get("novaPass").value="";
     get("novoTel").value="";
@@ -340,11 +337,11 @@ function remover(i){
     }
 }
 
-/* LIMPAR AO ABRIR MODAL */
+/* 🔥 LIMPAR AO ABRIR MODAL */
 document.getElementById('loginModal').addEventListener('show.bs.modal', limparLogin);
 
 listarAlunos();
-
 </script>
+
 </body>
 </html>
