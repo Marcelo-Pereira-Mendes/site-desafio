@@ -255,7 +255,7 @@ const treinos = {
     {nome:"Polichinelo", video:"video/polichinelo.mp4"},
     {nome:"Recuo braço", video:"video/recuo_alternado_com_extensao_de_braco.mp4"},
     {nome:"Agachamento salto", video:"video/agachamento_com_salto.mp4"},
-    {nome:"Elevação lateral", video:"video/elevacao_especial.mp4"}
+    {nome:"Elevação especial", video:"video/elevacao_especial.mp4"}
 ],
 
 4:{imagem:"imagem/corrida_desafio.png"},
@@ -282,7 +282,7 @@ const treinos = {
     {nome:"Polichinelo", video:"video/polichinelo.mp4"},
     {nome:"Recuo", video:"video/recuo_bracos.mp4"},
     {nome:"Salto", video:"video/agachamento_com_salto.mp4"},
-    {nome:"Lateral", video:"video/elevacao_joelho_elevacao_lateral.mp4"}
+    {nome:"Elevação especial", video:"video/elevacao_especial.mp4"}
 ],
 
 10:{imagem:"imagem/corrida_desafio.png"},
@@ -357,7 +357,7 @@ for(let dia=1;dia<=21;dia++){
             <strong>${ex.nome}</strong>
 
             <video controls preload="metadata" playsinline muted>
-                <source data-src="${ex.video}" type="video/mp4">
+                <source src="${ex.video}" type="video/mp4">
             </video>
 
             <div class="series-container">`
@@ -398,13 +398,7 @@ const observer = new IntersectionObserver(entries=>{
     entries.forEach(entry=>{
         if(entry.isIntersecting){
             const video = entry.target
-            const source = video.querySelector("source")
-
-            if(source.dataset.src){
-                source.src = source.dataset.src
-                video.load()
-                observer.unobserve(video)
-            }
+            observer.unobserve(video)
         }
     })
 },{rootMargin:"200px"})
