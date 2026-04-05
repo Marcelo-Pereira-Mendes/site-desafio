@@ -89,7 +89,7 @@ body{
     box-shadow:0 0 10px #00FFFF40;
 }
 
-/* INPUTS LOGIN */
+/* INPUTS LOGIN - MAIS VISÍVEIS */
 .form-control{
     background:#222;
     border:1px solid #00FFFF;
@@ -108,12 +108,6 @@ body{
     box-shadow:0 0 8px #FF00FF50;
 }
 
-/* CURSOR */
-button,
-input{
-    cursor:pointer;
-}
-
 /* ALERTA */
 #alertMsg{
     display:none;
@@ -121,17 +115,13 @@ input{
     top:20px;
     left:50%;
     transform:translateX(-50%);
-    
     width:90%;
     max-width:350px;
-
     background:#FF0040;
     color:#FFFFFF;
-
     padding:14px;
     border-radius:10px;
     text-align:center;
-
     z-index:9999;
 }
 
@@ -153,7 +143,6 @@ input{
     cursor: pointer;
 }
 
-/* INPUT ADMIN */
 #adminPanel input {
     background:#000;
     color:#FFFFFF;
@@ -188,11 +177,9 @@ input{
 <div class="modal-dialog modal-dialog-centered">
 <div class="modal-content">
 <div class="modal-body">
-
 <input id="user" class="form-control mb-2" placeholder="Login">
 <input id="pass" type="password" class="form-control mb-3" placeholder="Senha">
 <button class="btn btn-custom w-100" onclick="login()">Entrar</button>
-
 </div>
 </div>
 </div>
@@ -204,175 +191,113 @@ input{
 <!-- ADMIN -->
 <section id="adminPanel">
 <h2 class="text-center mb-3">PAINEL ADMIN</h2>
-
 <input id="novoUser" class="form-control mb-2" placeholder="Login">
 <input id="novaPass" class="form-control mb-2" placeholder="Senha">
 <input id="novoTel" class="form-control mb-3" placeholder="551999999999">
 <button class="btn btn-custom w-100 mb-3" onclick="cadastrar()">Cadastrar</button>
-
 <div id="lista"></div>
 </section>
 
-<!-- SCRIPT -->
+<!-- SCRIPTS -->
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
-
 <!-- Firebase -->
-<script type="module">
-import { initializeApp } from "https://www.gstatic.com/firebasejs/10.5.0/firebase-app.js";
-import { getDatabase, ref, set, get, remove, child } from "https://www.gstatic.com/firebasejs/10.5.0/firebase-database.js";
+<script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-database-compat.js"></script>
 
+<script>
+// Config Firebase (substitua pelos seus dados)
 const firebaseConfig = {
-  apiKey: "SEU_API_KEY",
-  authDomain: "SEU_AUTH_DOMAIN",
-  databaseURL: "SEU_DATABASE_URL",
-  projectId: "SEU_PROJECT_ID",
-  storageBucket: "SEU_BUCKET",
-  messagingSenderId: "SEU_SENDER_ID",
+  apiKey: "SUA_API_KEY",
+  authDomain: "SEU_PROJETO.firebaseapp.com",
+  databaseURL: "https://SEU_PROJETO-default-rtdb.firebaseio.com",
+  projectId: "SEU_PROJETO",
+  storageBucket: "SEU_PROJETO.appspot.com",
+  messagingSenderId: "SEU_ID",
   appId: "SEU_APP_ID"
 };
+firebase.initializeApp(firebaseConfig);
+const db = firebase.database();
 
-// Inicializa Firebase
-const app = initializeApp(firebaseConfig);
-const db = getDatabase(app);
+// CONFIG ADMIN
+const CONFIG = { adminUser:"Desenvolvedor", adminPass:"Taekwondo3028*" };
 
-const CONFIG = {
-    adminUser:"Desenvolvedor",
-    adminPass:"Taekwondo3028*"
-};
-
+// UTILS
 function get(id){ return document.getElementById(id); }
 function safe(v){ return (v||"").trim(); }
+function showAlert(msg){ let a=get("alertMsg"); a.innerText=msg; a.style.display="block"; setTimeout(()=>a.style.display="none",3000);}
+function limparLogin(){ get("user").value=""; get("pass").value=""; }
 
-/* 🔥 LIMPAR INPUT LOGIN */
-function limparLogin(){
-    get("user").value = "";
-    get("pass").value = "";
-}
-
-/* ALERTA */
-function showAlert(msg){
-    let a = get("alertMsg");
-    a.innerText = msg;
-    a.style.display="block";
-    setTimeout(()=>a.style.display="none",3000);
-}
-
-/* LOGIN */
-async function login(){
-    let user = safe(get("user").value);
-    let pass = safe(get("pass").value);
-
-    // LOGIN ADMIN
-    if(user === CONFIG.adminUser && pass === CONFIG.adminPass){
+// LOGIN
+function login(){
+    let user=safe(get("user").value), pass=safe(get("pass").value);
+    // admin
+    if(user===CONFIG.adminUser && pass===CONFIG.adminPass){
         get("home").style.display="none";
         get("adminPanel").style.display="block";
         listarAlunos();
         limparLogin();
         return;
     }
-
-    // LOGIN ALUNO
-    const dbRef = ref(db);
-    const snapshot = await get(child(dbRef, `alunos/${user}`));
-
-    if(!snapshot.exists()){
-        showAlert("Usuário não encontrado");
-        return;
-    }
-
-    const data = snapshot.val();
-    if(data.pass !== pass){
-        showAlert("Senha incorreta");
-        return;
-    }
-
-    limparLogin();
-    window.location.href = "treino.html";
+    // usuário
+    db.ref('alunos').orderByChild('user').equalTo(user).once('value', snap=>{
+        if(!snap.exists()){ showAlert("Usuário não encontrado"); return; }
+        snap.forEach(s=>{
+            let a=s.val();
+            if(a.pass!==pass){ showAlert("Senha incorreta"); }
+            else { limparLogin(); window.location.href="treino.html"; }
+        });
+    });
 }
 
-/* CADASTRO */
-async function cadastrar(){
-    let user = safe(get("novoUser").value);
-    let pass = safe(get("novaPass").value);
-    let tel = safe(get("novoTel").value);
+// CADASTRO
+function cadastrar(){
+    let user=safe(get("novoUser").value),
+        pass=safe(get("novaPass").value),
+        tel=safe(get("novoTel").value);
 
-    if(!user||!pass||!tel){
-        showAlert("Preencha todos os campos");
-        return;
-    }
+    if(!user||!pass||!tel){ showAlert("Preencha todos os campos"); return; }
 
-    // Verifica se já existe
-    const dbRef = ref(db);
-    const snapshot = await get(child(dbRef, `alunos/${user}`));
-    if(snapshot.exists()){
-        showAlert("Usuário já cadastrado");
-        return;
-    }
+    db.ref('alunos').orderByChild('user').equalTo(user).once('value', snap=>{
+        if(snap.exists()){ showAlert("Usuário já existe"); return; }
+        let novoAluno={user,pass,tel};
+        let key=db.ref('alunos').push().key;
+        let updates={}; updates['/alunos/'+key]=novoAluno;
+        db.ref().update(updates);
 
-    await set(ref(db, `alunos/${user}`), { user, pass, tel });
+        let msg=`Olá! Seu login: ${user} Senha: ${pass}`;
+        window.open(`https://wa.me/${tel}?text=${encodeURIComponent(msg)}`);
 
-    let msg = `Olá! Seu login: ${user} Senha: ${pass}`;
-    window.open(`https://wa.me/${tel}?text=${encodeURIComponent(msg)}`);
-
-    get("novoUser").value="";
-    get("novaPass").value="";
-    get("novoTel").value="";
-
-    listarAlunos();
+        get("novoUser").value=""; get("novaPass").value=""; get("novoTel").value="";
+        listarAlunos();
+    });
 }
 
-/* LISTAR */
-async function listarAlunos(){
-    const dbRef = ref(db);
-    const snapshot = await get(child(dbRef, 'alunos'));
-    let html="";
-    if(snapshot.exists()){
-        const data = snapshot.val();
-        Object.keys(data).forEach((key,i)=>{
-            const a = data[key];
-            html+=`
-            <div class="card-box">
+// LISTAR ALUNOS
+function listarAlunos(){
+    db.ref('alunos').once('value', snap=>{
+        let html="";
+        snap.forEach(s=>{
+            let a=s.val();
+            html+=`<div class="card-box">
+                <div><strong>${a.user}</strong><br>${a.pass}<br>${a.tel}</div>
                 <div>
-                    <strong>${a.user}</strong><br>
-                    ${a.pass}<br>
-                    ${a.tel}
-                </div>
-                <div>
-                    <button onclick="enviar('${key}')">Whats</button>
-                    <button onclick="remover('${key}')">Excluir</button>
+                    <button onclick="enviar('${s.key}')">Whats</button>
+                    <button onclick="remover('${s.key}')">Excluir</button>
                 </div>
             </div>`;
         });
-    }
-    get("lista").innerHTML=html;
+        get("lista").innerHTML=html;
+    });
 }
 
-/* WHATS */
-async function enviar(key){
-    const dbRef = ref(db);
-    const snapshot = await get(child(dbRef, `alunos/${key}`));
-    if(snapshot.exists()){
-        const a = snapshot.val();
-        let msg = `Olá! Seu login: ${a.user} Senha: ${a.pass}`;
-        window.open(`https://wa.me/${a.tel}?text=${encodeURIComponent(msg)}`);
-    }
-}
+// WHATS
+function enviar(key){ db.ref('alunos/'+key).once('value',s=>{ let a=s.val(); window.open(`https://wa.me/${a.tel}?text=${encodeURIComponent(`Olá! Seu login: ${a.user} Senha: ${a.pass}`)}`); }); }
 
-/* REMOVER */
-async function remover(key){
-    if(confirm("Excluir aluno?")){
-        await remove(ref(db, `alunos/${key}`));
-        listarAlunos();
-        limparLogin();
-    }
-}
+// REMOVER
+function remover(key){ if(confirm("Excluir aluno?")){ db.ref('alunos/'+key).remove(); listarAlunos(); limparLogin(); } }
 
-/* LIMPAR MODAL LOGIN */
 document.getElementById('loginModal').addEventListener('show.bs.modal', limparLogin);
-
 listarAlunos();
-
 </script>
-
 </body>
 </html>
