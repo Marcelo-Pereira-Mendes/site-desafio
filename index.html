@@ -1,0 +1,210 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Desafio 21 Dias - Marcelo Mendes</title>
+
+<!-- Bootstrap -->
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+
+<!-- Fonte -->
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700;900&display=swap" rel="stylesheet">
+
+<style>
+body{
+    margin:0;
+    font-family:'Inter',sans-serif;
+    color:#fff;
+    background:#000;
+    overflow-x:hidden;
+}
+
+/* HERO */
+.hero{
+    position:relative;
+    text-align:center;
+    padding:120px 20px;
+    min-height:100vh;
+    display:flex;
+    flex-direction:column;
+    justify-content:center;
+    align-items:center;
+    background:linear-gradient(135deg,#000,#111,#222);
+}
+
+/* IMAGEM PRINCIPAL */
+.hero::before{
+    content:"";
+    position:absolute;
+    top:0;
+    left:50%;
+    transform:translateX(-50%);
+    width:100%;
+    max-width:1200px;
+    height:100%;
+    background:url('imagem/TelaPrincipal.png') center/contain no-repeat;
+    opacity:0.35;
+    z-index:0;
+}
+
+/* TEXTO */
+.hero h1{
+    font-size:clamp(32px,5vw,56px);
+    font-weight:900;
+    z-index:1;
+    text-shadow:0 0 15px #00ffff,0 0 25px #ff00ff;
+}
+
+.hero p{
+    font-size:clamp(16px,2.5vw,22px);
+    color:#ddd;
+    font-style:italic; /* 🔥 pedido aplicado */
+    z-index:1;
+    max-width:600px;
+}
+
+/* BOTÃO */
+.btn-custom{
+    width:clamp(180px,60%,240px);
+    background:linear-gradient(135deg,#00ffff,#ff00ff);
+    border:none;
+    padding:16px;
+    border-radius:50px;
+    font-weight:bold;
+    color:#fff;
+    margin-top:20px;
+    box-shadow:0 0 15px #00ffff,0 0 25px #ff00ff;
+    transition:0.3s;
+    z-index:1;
+}
+
+.btn-custom:hover{
+    transform:scale(1.05);
+}
+
+/* MODAL */
+.modal-content{
+    background:#111;
+    border-radius:20px;
+    border:1px solid #00ffff;
+}
+
+.form-control{
+    background:#222;
+    border:1px solid #00ffff;
+    color:#fff;
+    padding:12px;
+}
+
+.form-control::placeholder{
+    color:#aaa;
+}
+
+.form-control:focus{
+    border-color:#ff00ff;
+    box-shadow:0 0 10px #ff00ff50;
+}
+
+/* MOBILE AJUSTE EXTRA */
+@media (max-width:768px){
+    .hero{
+        padding:100px 15px;
+    }
+
+    .hero p{
+        padding:0 10px;
+    }
+}
+</style>
+
+</head>
+
+<body>
+
+<!-- HERO -->
+<section class="hero">
+
+    <h1>DESAFIO 21 DIAS</h1>
+
+    <!-- 🔥 TEXTO EM ITÁLICO -->
+    <p><em>Transforme seu corpo com método estratégico</em></p>
+
+    <button class="btn btn-custom" data-bs-toggle="modal" data-bs-target="#loginModal">
+        ACEITAR DESAFIO
+    </button>
+
+</section>
+
+<!-- LOGIN MODAL -->
+<div class="modal fade" id="loginModal">
+<div class="modal-dialog modal-dialog-centered">
+<div class="modal-content p-3">
+
+    <input id="user" class="form-control mb-2" placeholder="Login">
+    <input id="pass" type="password" class="form-control mb-3" placeholder="Senha">
+
+    <button class="btn btn-custom w-100" onclick="login()">
+        Entrar
+    </button>
+
+</div>
+</div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+
+<script>
+
+// 🔐 ADMIN FIXO
+const ADMIN = {
+    user: "Admin",
+    pass: "321"
+};
+
+// 📦 BANCO LOCAL
+function getUsers(){
+    return JSON.parse(localStorage.getItem("usuarios") || "{}");
+}
+
+// 🔐 LOGIN
+function login(){
+
+    let user = document.getElementById("user").value;
+    let pass = document.getElementById("pass").value;
+
+    // 🔥 ADMIN LOGIN
+    if(user === ADMIN.user && pass === ADMIN.pass){
+
+        localStorage.setItem("logado", "true");
+        localStorage.setItem("usuario", "ADMIN");
+
+        window.location.href = "treino.html";
+        return;
+    }
+
+    // 👤 USUÁRIO NORMAL
+    let users = getUsers();
+
+    if(!users[user]){
+        alert("Usuário não encontrado");
+        return;
+    }
+
+    if(users[user].senha !== pass){
+        alert("Senha incorreta");
+        return;
+    }
+
+    // 🔥 SALVA SESSÃO
+    localStorage.setItem("logado", "true");
+    localStorage.setItem("usuario", user);
+
+    // 👉 REDIRECIONA
+    window.location.href = "treino.html";
+}
+
+</script>
+
+</body>
+</html>

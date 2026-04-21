@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Teste Layout Fitness</title>
+
+    <!-- Fonte -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;700;900&display=swap" rel="stylesheet">
+
+    <!-- Seu CSS -->
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+    <!-- NAVBAR -->
+    <nav class="navbar">
+        <div class="container" style="text-align:center;">
+            <span class="navbar-brand">MARCELO MENDES</span>
+        </div>
+    </nav>
+
+    <!-- HERO -->
+    <section class="hero">
+        <div class="container">
+
+            <div class="hero-badge">
+                CONSULTORIA ONLINE
+            </div>
+
+            <h1>
+                Transforme seu corpo com 
+                <span>treino inteligente</span>
+            </h1>
+
+            <p>
+                Emagrecimento, hipertrofia e definição com acompanhamento profissional.
+            </p>
+
+            <a href="#" class="btn-custom">
+                Começar agora
+            </a>
+
+            <br><br>
+
+            <img src="https://via.placeholder.com/400x400" class="hero-img" alt="Imagem">
+
+        </div>
+    </section>
+
+    <!-- PAINEL ALUNO (TESTE) -->
+    <div id="painelAluno" style="display:block;">
+        <div class="card">
+
+            <h1>Painel do Aluno</h1>
+
+            <h2>Treino A</h2>
+            <ul>
+                <li>Supino reto - 4x10</li>
+                <li>Agachamento - 4x10</li>
+                <li>Remada - 3x12</li>
+            </ul>
+
+            <h2>Treino B</h2>
+            <ul>
+                <li>Leg press - 4x12</li>
+                <li>Desenvolvimento - 3x10</li>
+                <li>Rosca direta - 3x12</li>
+            </ul>
+
+            <h2>Plano 21 dias</h2>
+            <div id="plano-21-dias">
+                <p>Dieta + treino estruturado para resultado acelerado.</p>
+            </div>
+
+            <button>Sair</button>
+
+        </div>
+    </div>
+
+    <!-- FOOTER -->
+    <footer>
+        © 2026 Marcelo Mendes - Todos os direitos reservados
+    </footer>
+
+</body>
+</html>

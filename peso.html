@@ -1,0 +1,261 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Controle de Peso</title>
+
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+
+<style>
+
+/* ===================== BASE ===================== */
+body {
+  margin: 0;
+  font-family: Arial, Helvetica, sans-serif;
+  color: #fff;
+  background: linear-gradient(rgba(0,0,0,0.75), rgba(0,0,0,0.75)),
+              url('https://copilot.microsoft.com/th/id/BCO.c9e7c156-35cf-4bb2-a60e-49f20025abf2.png');
+  background-size: cover;
+  background-position: center;
+}
+
+/* ===================== CONTAINER ===================== */
+.container {
+  padding: 15px;
+}
+
+/* ===================== TITULO ===================== */
+h2 {
+  text-align: center;
+  font-weight: 800;
+  font-size: 22px;
+  margin-bottom: 20px;
+}
+
+/* ===================== CARD ===================== */
+.card {
+  background: rgba(28,28,28,0.95);
+  border-radius: 16px;
+  box-shadow: 0 10px 30px rgba(0,0,0,0.6);
+}
+
+/* ===================== INPUTS ===================== */
+.form-control {
+  background: #1f1f1f;
+  color: #fff;
+  border-radius: 12px;
+  border: 1px solid #444;
+  padding: 14px;
+  font-size: 16px;
+}
+
+.form-control:focus {
+  border: 1px solid #00f5ff;
+  box-shadow: 0 0 10px rgba(0,245,255,0.5);
+}
+
+/* ===================== BOTÕES ===================== */
+.btn-custom {
+  background: linear-gradient(135deg,#00f5ff,#6a00ff,#ff00c8);
+  color: white;
+  border-radius: 12px;
+  border: none;
+  font-weight: 600;
+  padding: 14px;
+  font-size: 16px;
+}
+
+.btn-secondary {
+  background: #444;
+  border: none;
+  padding: 14px;
+}
+
+/* ===================== LISTA MELHORADA ===================== */
+.card-list {
+  background:#111;
+  padding:12px;
+  border-radius:12px;
+  margin-bottom:10px;
+  color:#FFFFFF; /* 🔥 AGORA VISÍVEL */
+}
+
+/* ===================== TEXTO BRANCO FORÇADO ===================== */
+.card-list * {
+  color:#FFFFFF !important;
+}
+
+/* ===================== RESPONSIVO ===================== */
+@media (min-width:768px){
+  .container{max-width:500px;margin:auto;}
+}
+@media (min-width:1024px){
+  .container{max-width:600px;}
+}
+
+</style>
+</head>
+
+<body>
+
+<div class="container mt-4">
+
+<h2>Controle de Peso Corporal</h2>
+
+<!-- LOGIN -->
+<div id="loginSection" class="card p-3 mt-3">
+  <h4>Login</h4>
+
+  <input type="text" id="login" class="form-control mb-2" placeholder="Login">
+  <input type="password" id="senha" class="form-control mb-3" placeholder="Senha">
+
+  <button class="btn btn-custom w-100 mb-2" onclick="verificarLogin()">Entrar</button>
+  <button class="btn btn-custom w-100" onclick="mostrarCadastro()">Cadastrar</button>
+</div>
+
+<!-- CADASTRO -->
+<div id="cadastroSection" class="card p-3 mt-3 d-none">
+  <h4>Cadastro</h4>
+
+  <input type="text" id="nome" class="form-control mb-2" placeholder="Nome">
+
+  <input type="date" id="dataInicial" class="form-control mb-2" onchange="calcularDatas()">
+
+  <input type="number" id="pesoInicial" class="form-control mb-2" placeholder="Peso Inicial">
+  <input type="number" id="pesoFinal" class="form-control mb-2" placeholder="Peso Final">
+
+  <input type="text" id="dataFinal" class="form-control mb-3" readonly>
+
+  <button class="btn btn-custom w-100 mb-2" onclick="salvarCadastro()">Salvar</button>
+  <button class="btn btn-secondary w-100" onclick="voltarLogin()">Voltar</button>
+</div>
+
+<!-- LISTA -->
+<div id="listaSection" class="card p-3 mt-3 d-none">
+  <h4>Alunos Cadastrados</h4>
+  <div id="lista"></div>
+</div>
+
+</div>
+
+<script>
+
+const loginSection = document.getElementById('loginSection');
+const cadastroSection = document.getElementById('cadastroSection');
+const listaSection = document.getElementById('listaSection');
+const lista = document.getElementById('lista');
+
+/* ===================== STORAGE ===================== */
+function getAlunos(){
+  return JSON.parse(localStorage.getItem("alunos") || "[]");
+}
+
+function setAlunos(data){
+  localStorage.setItem("alunos", JSON.stringify(data));
+}
+
+/* ===================== CADASTRO ===================== */
+function mostrarCadastro(){
+  cadastroSection.classList.remove('d-none');
+  loginSection.classList.add('d-none');
+}
+
+function voltarLogin(){
+  loginSection.classList.remove('d-none');
+  cadastroSection.classList.add('d-none');
+  listaSection.classList.add('d-none');
+}
+
+/* ===================== 21 DIAS AUTOMÁTICO ===================== */
+function calcularDatas(){
+
+  let data = document.getElementById("dataInicial").value;
+
+  if(!data) return;
+
+  let inicio = new Date(data);
+
+  let fim = new Date(inicio);
+  fim.setDate(fim.getDate() + 20); // 21 dias corridos
+
+  document.getElementById("dataFinal").value =
+    `${inicio.toLocaleDateString('pt-BR')} → ${fim.toLocaleDateString('pt-BR')}`;
+}
+
+/* ===================== SALVAR ===================== */
+function salvarCadastro(){
+
+  let alunos = getAlunos();
+
+  let aluno = {
+    login: document.getElementById("login").value,
+    senha: document.getElementById("senha").value,
+    nome: document.getElementById("nome").value,
+    dataInicial: document.getElementById("dataInicial").value,
+    pesoInicial: document.getElementById("pesoInicial").value,
+    pesoFinal: document.getElementById("pesoFinal").value,
+    dataFinal: document.getElementById("dataFinal").value
+  };
+
+  alunos.push(aluno);
+  setAlunos(alunos);
+
+  alert("Aluno salvo!");
+
+  mostrarTodos();
+}
+
+/* ===================== LISTA ===================== */
+function mostrarTodos(){
+
+  let alunos = getAlunos();
+
+  listaSection.classList.remove('d-none');
+
+  lista.innerHTML = alunos.map((a, i)=>`
+
+    <div class="card-list">
+      <strong>${a.nome}</strong><br>
+      Login: ${a.login}<br>
+      Início: ${a.dataInicial}<br>
+      Período: ${a.dataFinal}<br>
+      Peso Inicial: ${a.pesoInicial} kg<br>
+      Peso Final: ${a.pesoFinal || "-"} kg<br>
+
+      <button class="btn btn-sm btn-danger mt-2" onclick="remover(${i})">Excluir</button>
+    </div>
+
+  `).join("");
+}
+
+/* ===================== REMOVER ===================== */
+function remover(i){
+  let alunos = getAlunos();
+  alunos.splice(i,1);
+  setAlunos(alunos);
+  mostrarTodos();
+}
+
+/* ===================== LOGIN ===================== */
+function verificarLogin(){
+
+  let login = document.getElementById("login").value;
+  let senha = document.getElementById("senha").value;
+
+  let alunos = getAlunos();
+
+  let aluno = alunos.find(a => a.login === login && a.senha === senha);
+
+  if(!aluno){
+    alert("Usuário inválido!");
+    return;
+  }
+
+  alert("Login OK");
+}
+
+</script>
+
+</body>
+</html>
